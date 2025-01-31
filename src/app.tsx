@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import HomePage from './pages/homepage';
 import Layout from './pages/layout';
 import Dashboard from './pages/dashboard';
+import Conversation from './pages/conversation';
+import Message from './pages/message';
 
 const queryClient = new QueryClient({});
 
@@ -14,8 +16,11 @@ function App() {
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="u/messages" element={<Dashboard />} />
-            <Route path="u/messages/:conversationId" element={<Dashboard />} />
-            <Route path=":username" element={<Username />} />
+            <Route
+              path="u/messages/:conversationId"
+              element={<Conversation />}
+            />
+            <Route path=":username" element={<Message />} />
           </Route>
         </Routes>
       </BrowserRouter>
@@ -24,7 +29,3 @@ function App() {
 }
 
 export default App;
-
-const Username = () => {
-  return <>Hello</>;
-};
