@@ -1,5 +1,6 @@
 import { ArrowLeft, CornerUpRight } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router";
 import { ApiTypes } from "../api/types";
 import ActiveStatus from "../components/active-status";
 import Header from "../components/header";
@@ -32,12 +33,12 @@ const ConversationHeader = () => {
     <div className="border-y border-purple-200 bg-purple-100 px-4 py-2">
       <div className="mx-auto grid max-w-4xl">
         <span className="flex gap-3">
-          <a
-            href="#"
+          <Link
+            to="/u/messages"
             className="self-start rounded bg-purple-200 p-2 transition-colors hover:bg-purple-300"
           >
             <ArrowLeft className="h-5 w-5" />
-          </a>
+          </Link>
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-500 font-bold text-white">
             G
           </span>

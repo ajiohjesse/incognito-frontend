@@ -2,11 +2,11 @@ import {
   GhostIcon,
   LockKeyholeIcon,
   ReplyIcon,
-  SparklesIcon,
   VenetianMaskIcon,
   ZapIcon,
 } from "lucide-react";
 import heroImage from "../assets/hero3.svg";
+import GetStartedLink from "../components/get-started-link";
 
 const HomePage = () => {
   return (
@@ -154,12 +154,3 @@ const testimonials = [
     text: "Never knew anonymous chatting could be this fun! The instant message delivery make it strangely addictive.",
   },
 ];
-
-function GetStartedLink() {
-  return (
-    <button className="flex w-max cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 px-8 py-4 text-lg text-white shadow-2xl transition-colors transition-transform hover:scale-105 hover:bg-purple-600">
-      <SparklesIcon className="h-5 w-5" />
-      Create Anonymous Link
-    </button>
-  );
-}

@@ -1,27 +1,45 @@
+import { getFingerprint } from "@thumbmarkjs/thumbmarkjs";
+
 const keys = {
-  deviceIdKey: "incognito-device-id",
-  publicKey: "incognito-public-key",
+  deviceFingerprintKey: "incognito-device-fingerprint",
+  privateKey: "incognito-private-key",
 } as const;
 
-function getDeviceId() {
-  return localStorage.getItem(keys.deviceIdKey);
+function getDeviceFingerprint() {
+  return localStorage.getItem(keys.deviceFingerprintKey);
 }
 
-function setDeviceId(deviceId: string) {
-  localStorage.setItem(keys.deviceIdKey, deviceId);
+async function setDeviceFingerprint() {
+  try {
+    const fingerprint = await getFingerprint();
+    localStorage.setItem(keys.deviceFingerprintKey, fingerprint);
+    return fingerprint;
+  } catch (error: unknown) {
+    console.log("Fingerprint error:", error);
+  }
 }
 
-function getPublicKey() {
-  return localStorage.getItem(keys.publicKey);
+async function deleteDeviceFingerprint() {
+  localStorage.removeItem(keys.deviceFingerprintKey);
 }
 
-function setPublicKey(publicKey: string) {
-  localStorage.setItem(keys.publicKey, publicKey);
+function getPrivateKey() {
+  return localStorage.getItem(keys.privateKey);
+}
+
+function setPrivateKey(privateKey: string) {
+  localStorage.setItem(keys.privateKey, privateKey);
+}
+
+function deletePrivateKey() {
+  localStorage.removeItem(keys.privateKey);
 }
 
 export const storage = {
-  getDeviceId,
-  setDeviceId,
-  getPublicKey,
-  setPublicKey,
+  getDeviceFingerprint,
+  setDeviceFingerprint,
+  getPrivateKey,
+  setPrivateKey,
+  deletePrivateKey,
+  deleteDeviceFingerprint,
 };

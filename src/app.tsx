@@ -1,16 +1,18 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Route, Routes } from "react-router";
+import { queryClient } from "./lib/react-query";
 import Conversation from "./pages/conversation";
 import Dashboard from "./pages/dashboard";
 import HomePage from "./pages/homepage";
 import Layout from "./pages/layout";
 import Message from "./pages/message";
 
-const queryClient = new QueryClient({});
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster />
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
@@ -22,6 +24,7 @@ function App() {
           <Route path="u/messages/:conversationId" element={<Conversation />} />
         </Routes>
       </BrowserRouter>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

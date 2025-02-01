@@ -1,3 +1,18 @@
+interface ApiResponse<T> {
+  type: "success" | "error";
+  statusCode: number;
+  message: string;
+  data: T;
+}
+
+type CurrentUser = {
+  id: string;
+  createdAt: string;
+  username: string;
+  deviceFingerprint: string;
+  publicKey: string;
+};
+
 type User = {
   id: string;
   username: string;
@@ -33,7 +48,8 @@ type Message = {
 };
 
 export type ApiTypes = {
-  user: User;
-  conversation: Conversation;
-  message: Message;
+  user: ApiResponse<User>;
+  conversation: ApiResponse<Conversation>;
+  message: ApiResponse<Message>;
+  currentUser: ApiResponse<CurrentUser>;
 };

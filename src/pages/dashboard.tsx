@@ -1,8 +1,11 @@
 import { CopyIcon, ShareIcon } from "lucide-react";
-import { useState } from "react";
 // import { CopyIcon, ShareIcon, OnlineIcon, OfflineIcon } from './Icons';
+import { useQuery } from "@tanstack/react-query";
+import { Navigate } from "react-router";
+import { userQuery } from "../api/queries";
 import Conversations from "../components/conversations";
 import Messages from "../components/messages";
+import PageLoader from "../components/page-loader";
 import {
   Tabs,
   TabsContent,
@@ -11,19 +14,26 @@ import {
 } from "../components/ui/tabs";
 
 const Dashboard = () => {
-  const [username] = useState<string>("GhostUser123");
-  const [messageLink] = useState<string>(
-    "https://incognito.rehx.name.ng/ghostuser123",
-  );
+  const { data: user, error: userError } = useQuery(userQuery());
+  const location = window.location.origin;
+  console.log(location);
+
+  if (userError) {
+    return <Navigate to="/" />;
+  }
+
+  if (!user) {
+    return <PageLoader />;
+  }
 
   const copyLink = () => {
-    navigator.clipboard.writeText(messageLink);
+    // navigator.clipboard.writeText(messageLink);
     alert("Link copied to clipboard!");
   };
 
   const shareLink = async () => {
     try {
-      await navigator.share({ title: "My Incognito Link", url: messageLink });
+      // await navigator.share({ title: "My Incognito Link", url: messageLink });
     } catch {
       alert("Sharing failed. Please copy the link manually.");
     }
@@ -35,10 +45,10 @@ const Dashboard = () => {
         {/* Message Link Section */}
         <section className="mb-8 rounded-xl bg-white p-6 shadow-lg">
           <h1 className="mb-4 text-2xl leading-6 font-bold break-words text-purple-900">
-            Hi, {username}
+            Hi, {user.username}
           </h1>
           <p className="rounded-xl border border-purple-300 bg-purple-50 p-4 font-bold break-words text-purple-700">
-            {messageLink}
+            {`${location}/${user.username}`}
           </p>
           <p className="mt-2 mb-4 font-medium">
             Share the above link with others to start receiving messages.
