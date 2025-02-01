@@ -21,3 +21,13 @@ export const messagesQuery = () => {
     },
   });
 };
+
+export const conversationsQuery = () => {
+  return queryOptions({
+    queryKey: ["conversations"],
+    queryFn: async () => {
+      return (await api.get<ApiTypes["conversations"]>("/conversations")).data
+        .data;
+    },
+  });
+};

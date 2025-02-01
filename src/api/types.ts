@@ -51,6 +51,6 @@ type Message = {
 export type ApiTypes = {
   user: ApiResponse<User>;
   currentUser: ApiResponse<CurrentUser>;
-  conversations: ApiResponse<Conversation[]>;
+  conversations: ApiResponse<{ conversations: Conversation[] }>;
   messages: ApiResponse<{ messages: { message: Message }[] }>;
 };

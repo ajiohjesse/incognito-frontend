@@ -1,6 +1,5 @@
-import { CopyIcon, ShareIcon } from "lucide-react";
-// import { CopyIcon, ShareIcon, OnlineIcon, OfflineIcon } from './Icons';
 import { useQuery } from "@tanstack/react-query";
+import { CopyIcon, ShareIcon } from "lucide-react";
 import { Navigate } from "react-router";
 import { userQuery } from "../api/queries";
 import Conversations from "../components/conversations";
@@ -80,7 +79,7 @@ const Dashboard = () => {
               <Messages />
             </TabsContent>
             <TabsContent value="conversations">
-              <Conversations />
+              <Conversations userId={user.id} />
             </TabsContent>
           </Tabs>
         </div>
