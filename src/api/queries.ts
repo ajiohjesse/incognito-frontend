@@ -31,3 +31,14 @@ export const conversationsQuery = () => {
     },
   });
 };
+
+export const handshakeQuery = (userId: string) => {
+  return queryOptions({
+    enabled: !!userId,
+    queryKey: ["handshake", userId],
+    queryFn: async () => {
+      return (await api.get<ApiTypes["user"]>(`/users/handshake/${userId}`))
+        .data.data;
+    },
+  });
+};

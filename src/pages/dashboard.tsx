@@ -46,7 +46,7 @@ const Dashboard = () => {
             Hi, {user.username}
           </h1>
           <p className="rounded-xl border border-purple-300 bg-purple-50 p-4 font-bold break-words text-purple-700">
-            {`${location}/${user.username}`}
+            {`${location}/${user.id}`}
           </p>
           <p className="mt-2 mb-4 font-medium">
             Share the above link with others to start receiving messages.

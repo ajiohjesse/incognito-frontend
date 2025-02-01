@@ -39,13 +39,23 @@ type Conversation = {
 };
 
 type Message = {
-  senderUsername: string;
   id: string;
   createdAt: string;
   conversationId: string;
   senderId: string;
   contentEncrypted: string;
+  encryptionIV: string;
   isDelivered: boolean;
+};
+
+type FirstMessage = {
+  sharedKeyEncryptedByUser1: string;
+  sharedKeyEncryptedByUser2: string;
+  contentEncrypted: string;
+  encryptionIV: string;
+  receipientId: string;
+  deviceFingerprint: string;
+  publicKey: string;
 };
 
 export type ApiTypes = {
@@ -53,4 +63,6 @@ export type ApiTypes = {
   currentUser: ApiResponse<CurrentUser>;
   conversations: ApiResponse<{ conversations: Conversation[] }>;
   messages: ApiResponse<{ messages: { message: Message }[] }>;
+  postFirstMessage: FirstMessage;
+  fisrtMessage: ApiResponse<{ conversationId: string }>;
 };

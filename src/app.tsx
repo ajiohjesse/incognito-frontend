@@ -8,6 +8,7 @@ import Dashboard from "./pages/dashboard";
 import HomePage from "./pages/homepage";
 import Layout from "./pages/layout";
 import Message from "./pages/message";
+import NotFoundPage from "./pages/not-found";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="u/messages" element={<Dashboard />} />
 
-            <Route path=":username" element={<Message />} />
+            <Route path=":userId" element={<Message />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
           <Route path="u/messages/:conversationId" element={<Conversation />} />
         </Routes>

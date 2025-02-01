@@ -16,6 +16,7 @@ function GetStartedLink() {
   const encrypter = new Encrypter();
 
   const { isPending, mutate } = useMutation({
+    mutationKey: ["generate-link"],
     mutationFn: async () => {
       const fingerprint = await storage.setDeviceFingerprint();
       if (!fingerprint) {
@@ -53,9 +54,17 @@ function GetStartedLink() {
     );
   }
 
+  const handleGenerateLink = () => {
+    if (isPending) {
+      return;
+    }
+    mutate();
+  };
+
   return (
     <button
-      onClick={() => mutate()}
+      onClick={handleGenerateLink}
+      disabled={isPending}
       className="flex w-max cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 px-8 py-4 text-lg text-white shadow-2xl transition-colors transition-transform hover:scale-105 hover:bg-purple-600"
     >
       <Spinner
