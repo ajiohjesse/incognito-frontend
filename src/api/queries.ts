@@ -11,3 +11,13 @@ export const userQuery = () => {
     staleTime: Infinity,
   });
 };
+
+export const messagesQuery = () => {
+  return queryOptions({
+    queryKey: ["messages"],
+    queryFn: async () => {
+      return (await api.get<ApiTypes["messages"]>("/conversations/messages"))
+        .data.data;
+    },
+  });
+};

@@ -39,6 +39,7 @@ type Conversation = {
 };
 
 type Message = {
+  senderUsername: string;
   id: string;
   createdAt: string;
   conversationId: string;
@@ -49,7 +50,7 @@ type Message = {
 
 export type ApiTypes = {
   user: ApiResponse<User>;
-  conversation: ApiResponse<Conversation>;
-  message: ApiResponse<Message>;
   currentUser: ApiResponse<CurrentUser>;
+  conversations: ApiResponse<Conversation[]>;
+  messages: ApiResponse<{ messages: { message: Message }[] }>;
 };

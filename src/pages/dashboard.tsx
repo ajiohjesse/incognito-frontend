@@ -16,7 +16,6 @@ import {
 const Dashboard = () => {
   const { data: user, error: userError } = useQuery(userQuery());
   const location = window.location.origin;
-  console.log(location);
 
   if (userError) {
     return <Navigate to="/" />;
