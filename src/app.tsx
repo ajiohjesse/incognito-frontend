@@ -1,10 +1,10 @@
-import { BrowserRouter, Route, Routes } from 'react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import HomePage from './pages/homepage';
-import Layout from './pages/layout';
-import Dashboard from './pages/dashboard';
-import Conversation from './pages/conversation';
-import Message from './pages/message';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router";
+import Conversation from "./pages/conversation";
+import Dashboard from "./pages/dashboard";
+import HomePage from "./pages/homepage";
+import Layout from "./pages/layout";
+import Message from "./pages/message";
 
 const queryClient = new QueryClient({});
 

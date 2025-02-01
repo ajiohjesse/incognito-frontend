@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const Messages = () => {
   const [conversations] = useState<
@@ -9,44 +9,44 @@ const Messages = () => {
     }>
   >([
     {
-      id: '1',
-      friendUsername: 'AnonymousFriend1',
+      id: "1",
+      friendUsername: "AnonymousFriend1",
       message:
-        'Some random message that is just going to be truncated with a button to show more.',
+        "Some random message that is just going to be truncated with a button to show more.",
     },
     {
-      id: '3',
-      friendUsername: 'MysteryBuddy3',
+      id: "3",
+      friendUsername: "MysteryBuddy3",
       message:
-        'Some random message that is just going to be truncated with a button to show more.',
+        "Some random message that is just going to be truncated with a button to show more.",
     },
   ]);
   return (
-    <section className="bg-white p-6 rounded-xl shadow-lg">
-      <h2 className="text-lg font-bold text-purple-900 mb-4">Your Messages</h2>
+    <section className="rounded-xl bg-white p-6 shadow-lg">
+      <h2 className="mb-4 text-lg font-bold text-purple-900">Your Messages</h2>
       <div className="space-y-4">
-        {conversations.map(convo => (
+        {conversations.map((convo) => (
           <a
             href="#"
             key={convo.id}
-            className=" block p-4 bg-purple-50 rounded-lg hover:bg-purple-200 transition-colors shadow-md"
+            className="block rounded-lg bg-purple-50 p-4 shadow-md transition-colors hover:bg-purple-200"
           >
             <span className="flex gap-3">
-              <span className="w-10 h-10 shrink-0 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-500 font-bold text-white">
                 {convo.friendUsername[0]}
               </span>
 
               <span>
-                <span className="font-bold text-lg text-purple-900">
+                <span className="text-lg font-bold text-purple-900">
                   {convo.friendUsername}
                 </span>
-                <span className="font-medium line-clamp-1">
+                <span className="line-clamp-1 font-medium">
                   {convo.message}
                 </span>
 
-                <span className="flex font-medium items-center gap-2 mt-3">
+                <span className="mt-3 flex items-center gap-2 font-medium">
                   <span className="text-sm">
-                    {convo.message ? 'Online' : 'Offline'}
+                    {convo.message ? "Online" : "Offline"}
                   </span>
                   {convo.message ? (
                     <span className="size-2 rounded-full bg-green-600" />

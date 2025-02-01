@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import * as TabsPrimitive from '@radix-ui/react-tabs';
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+import * as React from "react";
 
 const Tabs = TabsPrimitive.Root;
 
@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={
-      'flex h-14 shadow-lg w-[min(80vw,400px)] mx-auto items-center justify-center rounded-xl bg-white p-2 text-purple-900' +
+      "mx-auto flex h-14 w-[min(80vw,400px)] items-center justify-center rounded-xl bg-white p-2 text-purple-900 shadow-lg" +
       className
     }
     {...props}
@@ -26,7 +26,7 @@ const TabsTrigger = React.forwardRef<
 >(({ ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
-    className="flex flex-1 h-full items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-bold ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-purple-600 data-[state=active]:text-purple-100 data-[state=active]:shadow-sm"
+    className="focus-visible:ring-ring flex h-full flex-1 items-center justify-center rounded-lg px-3 py-1.5 text-sm font-bold whitespace-nowrap ring-offset-white transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-purple-600 data-[state=active]:text-purple-100 data-[state=active]:shadow-sm"
     {...props}
   />
 ));
@@ -39,7 +39,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={
-      'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 ' +
+      "mt-2 ring-offset-white focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:outline-none " +
       className
     }
     {...props}
@@ -47,4 +47,4 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent };
+export { Tabs, TabsContent, TabsList, TabsTrigger };

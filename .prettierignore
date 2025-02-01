@@ -1,0 +1,41 @@
+# Ignore artifacts:
+build
+dist
+coverage
+
+
+# Ignore all node_modules
+node_modules
+
+# Ignore package lock
+package-lock.json
+
+# Ignore env files
+.env
+.env.* # All env files with extensions
+
+# Ignore public assets
+public
+
+# Ignore yarn.lock or pnpm-lock.yaml
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore Docker and Kubernetes files
+Dockerfile
+*.yml
+*.yaml
+
+# Ignore logs
+*.log
+
+# Ignore Git-related files
+.gitignore
+
+# Ignore coverage files
+coverage/
+
+# Ignore any IDE-related directories or files
+.vscode
+.idea
+.DS_Store

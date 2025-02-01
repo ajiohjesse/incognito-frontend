@@ -1,6 +1,6 @@
-import { VenetianMaskIcon } from 'lucide-react';
-import { Outlet } from 'react-router';
-import Header from '../components/header';
+import { VenetianMaskIcon } from "lucide-react";
+import { Outlet } from "react-router";
+import Header from "../components/header";
 
 const Layout = () => {
   return (
@@ -10,27 +10,27 @@ const Layout = () => {
       <Outlet />
 
       <footer className="bg-slate-900 py-12">
-        <div className="container flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center gap-2 mb-6 md:mb-0">
+        <div className="container flex flex-col items-center justify-between md:flex-row">
+          <div className="mb-6 flex items-center gap-2 md:mb-0">
             <VenetianMaskIcon className="h-8 w-8 text-purple-300" />
             <span className="text-xl font-bold text-slate-50">Incognito</span>
           </div>
-          <div className="flex gap-6 underline text-slate-300">
-            <a href="#" className="hover:text-purple-500 transition-colors">
+          <div className="flex gap-6 text-slate-300 underline">
+            <a href="#" className="transition-colors hover:text-purple-500">
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-purple-500 transition-colors">
+            <a href="#" className="transition-colors hover:text-purple-500">
               Terms
             </a>
             <a
               href="mailto:me@rehx.name.ng"
-              className="hover:text-purple-500 transition-colors"
+              className="transition-colors hover:text-purple-500"
             >
               Contact
             </a>
           </div>
         </div>
-        <div className="container font-medium text-center mt-8 text-slate-300">
+        <div className="container mt-8 text-center font-medium text-slate-300">
           <p>Built with ❤️ (and encrypted bytes) by R3HX.</p>
         </div>
       </footer>
