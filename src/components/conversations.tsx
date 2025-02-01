@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ActiveStatus from './active-status';
 
 const Conversations = () => {
   const [conversations] = useState<
@@ -48,16 +49,7 @@ const Conversations = () => {
                   {convo.messageCount} messages
                 </span>
 
-                <span className="flex font-medium items-center gap-2 mt-3">
-                  <span className="text-sm">
-                    {convo.isActive ? 'Online' : 'Offline'}
-                  </span>
-                  {convo.isActive ? (
-                    <span className="size-2 rounded-full bg-green-600" />
-                  ) : (
-                    <span className="size-2 rounded-full bg-rose-600" />
-                  )}
-                </span>
+                <ActiveStatus />
               </span>
             </span>
           </a>

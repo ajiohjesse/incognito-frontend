@@ -16,12 +16,10 @@ function App() {
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="u/messages" element={<Dashboard />} />
-            <Route
-              path="u/messages/:conversationId"
-              element={<Conversation />}
-            />
+
             <Route path=":username" element={<Message />} />
           </Route>
+          <Route path="u/messages/:conversationId" element={<Conversation />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

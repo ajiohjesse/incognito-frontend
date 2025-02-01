@@ -1,17 +1,11 @@
 import { VenetianMaskIcon } from 'lucide-react';
 import { Outlet } from 'react-router';
+import Header from '../components/header';
 
 const Layout = () => {
   return (
     <>
-      <header className=" h-20 flex items-center justify-between sticky top-0 z-50 bg-white ">
-        <div className="flex items-center gap-2 container">
-          <VenetianMaskIcon className="h-10 w-10 text-indigo-500 animate-bounce" />
-          <span className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent">
-            Incognito
-          </span>
-        </div>
-      </header>
+      <Header />
 
       <Outlet />
 
