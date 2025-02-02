@@ -55,7 +55,7 @@ const Conversations = (props: Props) => {
                       {friend.username}
                     </span>
 
-                    <ActiveStatus />
+                    <ActiveStatus online />
                   </span>
                 </span>
               </Link>

@@ -1,10 +1,12 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { ArrowLeft, CornerUpRight } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { Link, useParams } from "react-router";
 import {
   conversationMessagesQuery,
   conversationQuery,
+  messagesQuery,
   userQuery,
 } from "../api/queries";
 import ActiveStatus from "../components/active-status";
@@ -12,7 +14,12 @@ import ErrorDisplay from "../components/error";
 import Header from "../components/header";
 import MessageText from "../components/message-text";
 import PageLoader from "../components/page-loader";
+import Spinner from "../components/ui/spinner";
+import Encrypter from "../lib/encrypter";
+import { queryClient } from "../lib/react-query";
+import { storage } from "../lib/storage";
 import { cn } from "../lib/utils";
+import { useSocketStore } from "../stores/socket-store";
 
 interface Message {
   id: number;
@@ -65,8 +72,14 @@ const Conversation: React.FC = () => {
           friendUsername={friend.username}
           username={user.username}
           userId={user.id}
+          friendId={friend.id}
         />
-        <ConversationFooter />
+        <ConversationFooter
+          conversationId={conversation.id}
+          friendId={friend.id}
+          sharedKeyEncrypted={sharedKeyEncrypted}
+          userId={user.id}
+        />
       </main>
     </>
   );
@@ -76,10 +89,15 @@ export default Conversation;
 
 const ConversationHeader = ({
   friendUsername,
+  friendId,
 }: {
   friendUsername: string;
   friendId: string;
 }) => {
+  const { activeFriends, friendsTyping } = useSocketStore();
+  const isOnline = activeFriends.includes(friendId);
+  const isTyping = friendsTyping.includes(friendId);
+
   return (
     <div className="border-y border-purple-200 bg-purple-100 px-4 py-2">
       <div className="mx-auto grid max-w-4xl">
@@ -96,7 +114,15 @@ const ConversationHeader = ({
 
           <span className="grid">
             <span className="font-bold text-purple-900">{friendUsername}</span>
-            <ActiveStatus />
+            <ActiveStatus online={isOnline} />
+            <span
+              className={cn(
+                "animate-pulse text-sm font-medium",
+                isTyping ? "visible" : "invisible",
+              )}
+            >
+              Is Typing . . .
+            </span>
           </span>
         </span>
       </div>
@@ -110,15 +136,19 @@ const ConversationBody = ({
   userId,
   friendUsername,
   sharedKeyEncrypted,
+  friendId,
 }: {
   conversationId: string;
   sharedKeyEncrypted: string;
   username: string;
   userId: string;
   friendUsername: string;
+  friendId: string;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { data, error } = useQuery(conversationMessagesQuery(conversationId));
+  const { friendsTyping } = useSocketStore();
+  const isTyping = friendsTyping.includes(friendId);
 
   // Auto-scroll to the latest message
   useEffect(() => {
@@ -159,14 +189,32 @@ const ConversationBody = ({
             isMine={msg.senderId === userId}
           />
         ))}
+        {isTyping && (
+          <div className="w-fit animate-bounce rounded-2xl rounded-bl-none bg-pink-800 px-4 py-2 text-white">
+            Is Typing . . .
+          </div>
+        )}
       </div>
     </section>
   );
 };
 
-const ConversationFooter = () => {
+const ConversationFooter = ({
+  conversationId,
+  friendId,
+  sharedKeyEncrypted,
+  userId,
+}: {
+  conversationId: string;
+  friendId: string;
+  sharedKeyEncrypted: string;
+  userId: string;
+}) => {
   const [newMessage, setNewMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { socket } = useSocketStore();
+  const encrypter = new Encrypter();
 
   // Adjust textarea height based on content
   useEffect(() => {
@@ -175,6 +223,94 @@ const ConversationFooter = () => {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set height based on scroll height
     }
   }, [newMessage]);
+
+  const handleSendMessage = async () => {
+    if (newMessage.trim() === "") {
+      toast.error("Please enter a message before sending.", {
+        id: "message-error",
+      });
+      return;
+    }
+    if (!socket) {
+      toast.error("You can't send messages while discconnected!", {
+        id: "message-error",
+      });
+      return;
+    }
+
+    setIsSending(true);
+
+    try {
+      const privateKey = storage.getPrivateKey();
+      if (!privateKey) return;
+      const sharedKey = await encrypter.decryptAESKeyWithRSA(
+        privateKey,
+        sharedKeyEncrypted,
+      );
+      const { encryptedData, iv } = await encrypter.encryptMessage(
+        sharedKey,
+        newMessage,
+      );
+
+      queryClient.setQueryData(
+        conversationMessagesQuery(conversationId).queryKey,
+        (old) => ({
+          messages: old
+            ? [
+                ...old.messages,
+                {
+                  contentEncrypted: encryptedData,
+                  encryptionIV: iv,
+                  createdAt: new Date().toISOString(),
+                  senderId: userId,
+                  conversationId,
+                  id: crypto.randomUUID(),
+                  isDelivered: false,
+                },
+              ]
+            : [
+                {
+                  contentEncrypted: encryptedData,
+                  encryptionIV: iv,
+                  createdAt: new Date().toISOString(),
+                  senderId: userId,
+                  conversationId,
+                  id: crypto.randomUUID(),
+                  isDelivered: false,
+                },
+              ],
+        }),
+      );
+
+      socket?.emit(
+        "user:message",
+        {
+          conversationId: conversationId,
+          contentEncrypted: encryptedData,
+          encryptionIV: iv,
+          createdAt: new Date().toISOString(),
+          receiverId: friendId,
+        },
+        (sent) => {
+          if (!sent) {
+            toast.error("Message sending failed!", {
+              id: "message-error",
+            });
+          }
+          queryClient.invalidateQueries(
+            conversationMessagesQuery(conversationId),
+          );
+          queryClient.invalidateQueries(messagesQuery());
+        },
+      );
+      setNewMessage("");
+    } catch (error) {
+      console.error("Message Error:", error);
+      toast.error("Message sending failed!", { id: "message-error" });
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
     <div className="border-t border-purple-200 bg-white p-4">
@@ -187,13 +323,16 @@ const ConversationFooter = () => {
           placeholder="Type a message..."
           rows={1}
           className="max-h-32 flex-1 resize-none overflow-y-auto rounded-lg border border-purple-300 p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-          style={{ minHeight: "40px" }} // Minimum height for the textarea
+          style={{ minHeight: "40px" }}
         />
         <button
-          // onClick={handleSendMessage}
+          onClick={handleSendMessage}
+          disabled={isSending}
           className="cursor-pointer rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
         >
-          Send
+          <Spinner loading={isSending} title="Sending message">
+            Send
+          </Spinner>
         </button>
       </div>
     </div>

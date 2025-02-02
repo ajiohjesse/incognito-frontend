@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CopyIcon, ShareIcon } from "lucide-react";
 import { Navigate } from "react-router";
 import { userQuery } from "../api/queries";
+import ActiveStatus from "../components/active-status";
 import Conversations from "../components/conversations";
 import Messages from "../components/messages";
 import PageLoader from "../components/page-loader";
@@ -11,6 +12,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs";
+import { useSocketStore } from "../stores/socket-store";
 
 const Dashboard = () => {
   const { data: user, error: userError } = useQuery(userQuery());
@@ -45,6 +47,10 @@ const Dashboard = () => {
           <h1 className="mb-4 text-2xl leading-6 font-bold break-words text-purple-900">
             Hi, {user.username}
           </h1>
+          <div className="flex items-center gap-2 py-2">
+            You are currently
+            <UserOnlineStatus />
+          </div>
           <p className="rounded-xl border border-purple-300 bg-purple-50 p-4 font-bold break-words text-purple-700">
             {`${location}/${user.id}`}
           </p>
@@ -89,3 +95,8 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+const UserOnlineStatus = () => {
+  const { socket } = useSocketStore();
+  return <ActiveStatus online={!!socket} />;
+};

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { messagesQuery } from "../api/queries";
+import ActiveStatus from "./active-status";
 import MessageText from "./message-text";
 
 const Messages = () => {
@@ -62,16 +63,7 @@ const Messages = () => {
                     {new Date(m.createdAt).toLocaleString()}
                   </span>
 
-                  <span className="mt-3 flex items-center gap-2 font-medium">
-                    <span className="text-sm">
-                      {m.isDelivered ? "Online" : "Offline"}
-                    </span>
-                    {m.isDelivered ? (
-                      <span className="size-2 rounded-full bg-green-600" />
-                    ) : (
-                      <span className="size-2 rounded-full bg-rose-600" />
-                    )}
-                  </span>
+                  <ActiveStatus online />
                 </span>
               </span>
             </Link>
