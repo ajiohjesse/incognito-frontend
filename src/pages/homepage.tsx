@@ -147,7 +147,7 @@ const testimonials = [
   },
   {
     name: "Anonymous User",
-    text: "dropped this link in my class groupchat and the questions went CRAZY 📚✨ zero lag, instant msgs, my students are obsessed lol",
+    text: "dropped this link in my class groupchat and the questions went CRAZY 📚✨ zero lag, instant msgs, I'm obsessed lol",
   },
   {
     name: "Anonymous User",

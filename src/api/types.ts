@@ -47,6 +47,16 @@ type ConversationBasic = {
   createdAt: string;
 };
 
+type MessageBasic = {
+  id: string;
+  createdAt: string;
+  conversationId: string;
+  senderId: string;
+  contentEncrypted: string;
+  encryptionIV: string;
+  isDelivered: boolean;
+};
+
 type Message = {
   id: string;
   createdAt: string;
@@ -88,7 +98,6 @@ export type ApiTypes = {
   conversationNullable: ApiResponse<{
     conversation: ConversationBasic | null;
   }>;
-  conversation: ApiResponse<{
-    conversation: ConversationBasic;
-  }>;
+  conversation: ApiResponse<Conversation | null>;
+  conversationMessages: ApiResponse<{ messages: MessageBasic[] }>;
 };

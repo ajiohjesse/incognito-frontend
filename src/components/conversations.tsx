@@ -54,9 +54,6 @@ const Conversations = (props: Props) => {
                     <span className="text-lg font-bold text-purple-900">
                       {friend.username}
                     </span>
-                    <span className="font-medium text-purple-500">
-                      12 messages
-                    </span>
 
                     <ActiveStatus />
                   </span>
