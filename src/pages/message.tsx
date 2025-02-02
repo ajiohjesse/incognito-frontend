@@ -113,8 +113,9 @@ const UserToUserMessage = (props: {
         sharedKeyEncryptedByUser2: user2SharedKey,
       };
 
-      return (await api.post<ApiTypes["conversation"]>("/conversations", data))
-        .data.data;
+      return (
+        await api.post<ApiTypes["conversationBasic"]>("/conversations", data)
+      ).data.data;
     },
     onSuccess: (data) => {
       setMessage("");

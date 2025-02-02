@@ -99,5 +99,6 @@ export type ApiTypes = {
     conversation: ConversationBasic | null;
   }>;
   conversation: ApiResponse<Conversation | null>;
+  conversationBasic: ApiResponse<{ conversation: ConversationBasic }>;
   conversationMessages: ApiResponse<{ messages: MessageBasic[] }>;
 };
