@@ -1,15 +1,5 @@
 import { Socket } from "socket.io-client";
 
-// interface MessageReceived {
-//   id: string;
-//   conversationId: string;
-//   senderId: string;
-//   contentEncrypted: string;
-//   encryptionIV: string;
-//   isDelivered: boolean;
-//   createdAt: string;
-// }
-
 interface MessageSent {
   conversationId: string;
   contentEncrypted: string;
