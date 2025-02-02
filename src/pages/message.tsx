@@ -1,10 +1,14 @@
-import { useMutation, useQueries } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { VenetianMaskIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate, useParams } from "react-router";
-import { handshakeQuery, userQuery } from "../api/queries";
+import { Link, Navigate, useNavigate, useParams } from "react-router";
+import {
+  conversationWithFriendQuery,
+  handshakeQuery,
+  userQuery,
+} from "../api/queries";
 import { ApiTypes } from "../api/types";
 import ErrorDisplay from "../components/error";
 import PageLoader from "../components/page-loader";
@@ -37,19 +41,25 @@ const Message: React.FC = () => {
     return <PageLoader />;
   }
 
-  //if the current user is authenticated and there is a privateKey available,
-  // send message from chat interface
+  //dont allow user to send message to self
+  if (userResult.data?.id === handshakeResult.data.id) {
+    return <Navigate to="/u/messages" replace />;
+  }
+
+  //if the current user is authenticated and there is a privateKey available
   if (userResult.data && savedPrivateKey) {
     return (
       <UserToUserMessage
-        userId={userResult.data.id}
-        publicKey={userResult.data.publicKey}
+        userPublicKey={userResult.data.publicKey}
+        friendUsername={handshakeResult.data.username}
+        friendId={handshakeResult.data.id}
+        friendPublicKey={handshakeResult.data.publicKey}
       />
     );
   }
 
   //if the current user is not authenticated or no private key,
-  // send message from dashboard
+  // send message from single message page
   //this will authenticate(create) the current user afresh
   //and delete its record if it existed before (i.e no private key)
   return (
@@ -65,12 +75,88 @@ const Message: React.FC = () => {
 
 export default Message;
 
-const UserToUserMessage = (props: { userId: string; publicKey: string }) => {
-  //if yes,
-  // check if there is a conversation with the friend
-  //if yes, navigate to conversation component
-  //if not, create a new conversation and redirect to it
-  return <div>Enter</div>;
+const UserToUserMessage = (props: {
+  userPublicKey: string;
+  friendUsername: string;
+  friendId: string;
+  friendPublicKey: string;
+}) => {
+  const { userPublicKey, friendUsername, friendId, friendPublicKey } = props;
+  const { data, error } = useQuery(conversationWithFriendQuery(friendId));
+  const [message, setMessage] = useState("");
+  const encrypter = new Encrypter();
+  const navigate = useNavigate();
+
+  const { isPending, mutate } = useMutation({
+    mutationKey: ["first-auth-message", friendId],
+    mutationFn: async () => {
+      const sharedKey = await encrypter.generateAESKey();
+      const user1SharedKey = await encrypter.encryptAESKeyWithRSA(
+        userPublicKey,
+        sharedKey,
+      );
+      const user2SharedKey = await encrypter.encryptAESKeyWithRSA(
+        friendPublicKey,
+        sharedKey,
+      );
+
+      const { encryptedData, iv } = await encrypter.encryptMessage(
+        sharedKey,
+        message,
+      );
+
+      const data: ApiTypes["postFirstAuthMessage"] = {
+        contentEncrypted: encryptedData,
+        encryptionIV: iv,
+        friendId,
+        sharedKeyEncryptedByUser1: user1SharedKey,
+        sharedKeyEncryptedByUser2: user2SharedKey,
+      };
+
+      return (await api.post<ApiTypes["conversation"]>("/conversations", data))
+        .data.data;
+    },
+    onSuccess: (data) => {
+      setMessage("");
+      toast.success("Message sent successfully!", {
+        id: "message-success",
+      });
+
+      navigate(`/u/messages/${data.conversation.id}`);
+    },
+  });
+
+  if (error) {
+    return <ErrorDisplay />;
+  }
+
+  if (!data) {
+    return <PageLoader />;
+  }
+
+  if (data.conversation) {
+    return <Navigate to={`/u/messages/${data.conversation.id}`} />;
+  }
+
+  const handleSendMessage = () => {
+    if (message.trim() === "") {
+      toast.error("Please enter a message before sending.", {
+        id: "message-error",
+      });
+      return;
+    }
+    mutate();
+  };
+
+  return (
+    <MessageForm
+      friendUsername={friendUsername}
+      setMessage={setMessage}
+      message={message}
+      handleSendMessage={handleSendMessage}
+      isPending={isPending}
+    />
+  );
 };
 
 interface FirstMessageProps {
@@ -159,6 +245,28 @@ const FirstMessage = (props: FirstMessageProps) => {
   };
 
   return (
+    <MessageForm
+      friendUsername={friend.username}
+      handleSendMessage={handleSendMessage}
+      isPending={isPending}
+      message={message}
+      setMessage={setMessage}
+    />
+  );
+};
+
+interface MessageFormProps {
+  friendUsername: string;
+  handleSendMessage: () => void;
+  message: string;
+  setMessage: (message: string) => void;
+  isPending: boolean;
+}
+const MessageForm = (props: MessageFormProps) => {
+  const { friendUsername, handleSendMessage, isPending, message, setMessage } =
+    props;
+
+  return (
     <main className="bg-gradient-to-b from-purple-50 to-pink-50">
       <div className="mx-auto flex max-w-4xl flex-col px-4 py-12">
         {/* Fancy Text Section */}
@@ -178,7 +286,7 @@ const FirstMessage = (props: FirstMessageProps) => {
           <h2 className="mb-2 text-xl font-semibold text-purple-700">
             Sending to:
           </h2>
-          <p className="text-lg text-pink-600">@{friend.username}</p>
+          <p className="text-lg font-medium text-pink-700">@{friendUsername}</p>
         </div>
 
         {/* Message Input Section */}

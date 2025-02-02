@@ -38,6 +38,15 @@ type Conversation = {
   };
 };
 
+type ConversationBasic = {
+  id: string;
+  user1Id: string;
+  user2Id: string;
+  sharedKeyEncryptedByUser1: string;
+  sharedKeyEncryptedByUser2: string;
+  createdAt: string;
+};
+
 type Message = {
   id: string;
   createdAt: string;
@@ -46,6 +55,8 @@ type Message = {
   contentEncrypted: string;
   encryptionIV: string;
   isDelivered: boolean;
+  senderUsername: string;
+  userSharedKeyEncrypted: string;
 };
 
 type FirstMessage = {
@@ -58,11 +69,26 @@ type FirstMessage = {
   publicKey: string;
 };
 
+type FirstAuthMessage = {
+  sharedKeyEncryptedByUser1: string;
+  sharedKeyEncryptedByUser2: string;
+  contentEncrypted: string;
+  encryptionIV: string;
+  friendId: string;
+};
+
 export type ApiTypes = {
   user: ApiResponse<User>;
   currentUser: ApiResponse<CurrentUser>;
   conversations: ApiResponse<{ conversations: Conversation[] }>;
-  messages: ApiResponse<{ messages: { message: Message }[] }>;
+  messages: ApiResponse<{ messages: Message[] }>;
   postFirstMessage: FirstMessage;
+  postFirstAuthMessage: FirstAuthMessage;
   fisrtMessage: ApiResponse<{ conversationId: string }>;
+  conversationNullable: ApiResponse<{
+    conversation: ConversationBasic | null;
+  }>;
+  conversation: ApiResponse<{
+    conversation: ConversationBasic;
+  }>;
 };

@@ -17,7 +17,7 @@ const Dashboard = () => {
   const location = window.location.origin;
 
   if (userError) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   if (!user) {

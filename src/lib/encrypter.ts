@@ -92,7 +92,7 @@ class Encrypter {
     aesKeyBase64: string,
     encryptedDataBase64: string,
     ivBase64: string,
-  ): Promise<string> {
+  ) {
     const aesKey = await this.importAESKey(aesKeyBase64);
     const encryptedData = this.base64ToArrayBuffer(encryptedDataBase64);
     const iv = this.base64ToArrayBuffer(ivBase64);

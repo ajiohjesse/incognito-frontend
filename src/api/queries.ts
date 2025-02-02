@@ -42,3 +42,16 @@ export const handshakeQuery = (userId: string) => {
     },
   });
 };
+
+export const conversationWithFriendQuery = (friendId: string) => {
+  return queryOptions({
+    queryKey: ["conversation-with-friend", friendId],
+    queryFn: async () => {
+      return (
+        await api.get<ApiTypes["conversationNullable"]>(
+          `/conversations/friends/${friendId}`,
+        )
+      ).data.data;
+    },
+  });
+};
