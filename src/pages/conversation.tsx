@@ -15,10 +15,11 @@ import Header from "../components/header";
 import MessageText from "../components/message-text";
 import PageLoader from "../components/page-loader";
 import Spinner from "../components/ui/spinner";
+import useViewportHeight from "../hooks/use-viewport-height";
 import Encrypter from "../lib/encrypter";
 import { queryClient } from "../lib/react-query";
 import { storage } from "../lib/storage";
-import { cn } from "../lib/utils";
+import { cn, formatDate } from "../lib/utils";
 import { useSocketStore } from "../stores/socket-store";
 
 interface Message {
@@ -30,6 +31,7 @@ interface Message {
 
 const Conversation: React.FC = () => {
   const { conversationId } = useParams();
+  const viewportHeight = useViewportHeight();
   const [userResult, conversationResult] = useQueries({
     queries: [userQuery(), conversationQuery(conversationId)],
   });
@@ -61,7 +63,14 @@ const Conversation: React.FC = () => {
   return (
     <>
       <Header />
-      <main className="flex h-[calc(100dvh-64px)] flex-col bg-gradient-to-b from-purple-50 to-pink-50">
+      <main
+        style={{
+          height: viewportHeight - 64,
+        }}
+        className={cn(
+          "flex flex-col bg-gradient-to-b from-purple-50 to-pink-50",
+        )}
+      >
         <ConversationHeader
           friendId={friend.id}
           friendUsername={friend.username}
@@ -164,9 +173,11 @@ const ConversationBody = ({
 
   if (!data) {
     return (
-      <div className="flex flex-col items-center justify-center space-y-4 py-12">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-pink-500"></div>
-        <p className="text-lg text-purple-700">Loading...</p>
+      <div className="flex flex-1 flex-col items-center justify-center space-y-4 py-12">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-transparent border-t-pink-500"></div>
+        <p className="animate-pulse text-center text-lg font-medium text-slate-500">
+          Loading messages . . .
+        </p>
       </div>
     );
   }
@@ -313,8 +324,8 @@ const ConversationFooter = ({
   };
 
   return (
-    <div className="border-t border-purple-200 bg-white p-4">
-      <div className="mx-auto flex max-w-4xl items-end space-x-2">
+    <div className="pointer-events-none border-t border-purple-200 bg-white p-4">
+      <div className="pointer-events-auto mx-auto flex max-w-4xl items-end space-x-2">
         <textarea
           ref={textareaRef}
           value={newMessage}
@@ -366,7 +377,7 @@ const Message = (props: MessageProps) => {
         <div className="flex items-center gap-2">
           <span
             className={cn(
-              "flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-white shadow-2xl",
+              "grid h-10 w-10 shrink-0 place-items-center rounded-full font-bold text-white shadow-2xl",
               isMine ? "bg-purple-800" : "bg-pink-800",
             )}
           >
@@ -376,8 +387,8 @@ const Message = (props: MessageProps) => {
             <span className="font-bold">
               {isMine ? username : friendUsername}
             </span>
-            <span className="text-xs font-medium text-slate-600">
-              {new Date(createdAt).toLocaleString()}
+            <span className="text-sm font-medium text-slate-600">
+              {formatDate(createdAt)}
             </span>
           </div>
         </div>

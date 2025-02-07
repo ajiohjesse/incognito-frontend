@@ -20,3 +20,16 @@ export function handleQueryError(error: unknown) {
 
   toast.error("Something went wrong");
 }
+
+export function formatDate(date: string | Date) {
+  // return new Intl.DateTimeFormat("en-NG", {
+  //   dateStyle: "medium",
+  //   timeStyle: "short",
+  //   hour12: true,
+  //   timeZone: "Africa/Lagos",
+  // }).format(typeof date === "string" ? new Date(date) : date);
+
+  return typeof date === "string"
+    ? new Date(date).toLocaleString("en-NG", {})
+    : date.toLocaleString("en-NG");
+}

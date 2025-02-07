@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { conversationsQuery } from "../api/queries";
-import ActiveStatus from "./active-status";
+import FriendActiveStatus from "./friend-active-status";
 
 interface Props {
   userId: string;
@@ -55,7 +55,7 @@ const Conversations = (props: Props) => {
                       {friend.username}
                     </span>
 
-                    <ActiveStatus online />
+                    <FriendActiveStatus friendId={friend.id} />
                   </span>
                 </span>
               </Link>

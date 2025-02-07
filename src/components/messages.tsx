@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { messagesQuery } from "../api/queries";
-import ActiveStatus from "./active-status";
+import FriendActiveStatus from "./friend-active-status";
 import MessageText from "./message-text";
 
 const Messages = () => {
@@ -63,7 +63,7 @@ const Messages = () => {
                     {new Date(m.createdAt).toLocaleString()}
                   </span>
 
-                  <ActiveStatus online />
+                  <FriendActiveStatus friendId={m.senderId} />
                 </span>
               </span>
             </Link>
