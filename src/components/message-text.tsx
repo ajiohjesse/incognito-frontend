@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Encrypter from "../lib/encrypter";
 import { storage } from "../lib/storage";
 
@@ -36,6 +37,8 @@ const MessageText = ({
         setMessage(decryptedMessage);
       } catch (error) {
         console.log("Message decryption error:", error);
+        toast.error("Failed to decrypt messages", { id: "decrypt-error" });
+        setMessage("###############");
       }
     }
 

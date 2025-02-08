@@ -4,7 +4,6 @@ interface MessageSent {
   conversationId: string;
   contentEncrypted: string;
   encryptionIV: string;
-  createdAt: string;
   receiverId: string;
 }
 
@@ -18,7 +17,10 @@ interface ServerToClientEvents {
 }
 
 interface ClientToServerEvents {
-  "user:message": (message: MessageSent, cb: (sent: boolean) => void) => void;
+  "user:message": (
+    message: MessageSent,
+    cb: (sent: boolean, message?: string) => void,
+  ) => void;
   "user:typing": (friendId: string) => void;
   "user:stopTyping": (friendId: string) => void;
 }

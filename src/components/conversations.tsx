@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { MessageSquareIcon } from "lucide-react";
 import { Link } from "react-router";
 import { conversationsQuery } from "../api/queries";
 import FriendActiveStatus from "./friend-active-status";
@@ -32,7 +33,13 @@ const Conversations = (props: Props) => {
       </h2>
       <div className="space-y-4">
         {conversations.length === 0 ? (
-          <p>No conversations found at the moment</p>
+          <div className="grid place-items-center gap-2 py-4 text-center font-semibold">
+            <MessageSquareIcon className="size-24 text-purple-400" />
+            <p className="text-slate-600">
+              You have no conversations yet. Share your link to begin receiving
+              messages.
+            </p>
+          </div>
         ) : (
           conversations.map((convo) => {
             const friend =

@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { CopyIcon, ShareIcon } from "lucide-react";
+import { useEffect } from "react";
 import { Navigate } from "react-router";
 import { userQuery } from "../api/queries";
 import ActiveStatus from "../components/active-status";
 import Conversations from "../components/conversations";
+import {
+  CopyMessageLink,
+  ShareMessageLink,
+} from "../components/copy-and-share";
+import DeleteAccount from "../components/delete-account";
 import Messages from "../components/messages";
 import PageLoader from "../components/page-loader";
 import {
@@ -17,6 +22,12 @@ import { useSocketStore } from "../stores/socket-store";
 const Dashboard = () => {
   const { data: user, error: userError } = useQuery(userQuery());
   const location = window.location.origin;
+  const { socket, connect } = useSocketStore();
+
+  useEffect(() => {
+    if (socket) return;
+    connect();
+  }, [socket, connect]);
 
   if (userError) {
     return <Navigate to="/" replace />;
@@ -25,19 +36,6 @@ const Dashboard = () => {
   if (!user) {
     return <PageLoader />;
   }
-
-  const copyLink = () => {
-    // navigator.clipboard.writeText(messageLink);
-    alert("Link copied to clipboard!");
-  };
-
-  const shareLink = async () => {
-    try {
-      // await navigator.share({ title: "My Incognito Link", url: messageLink });
-    } catch {
-      alert("Sharing failed. Please copy the link manually.");
-    }
-  };
 
   return (
     <div className="bg-gradient-to-b from-purple-100 to-indigo-100">
@@ -57,21 +55,11 @@ const Dashboard = () => {
           <p className="mt-2 mb-4 font-medium">
             Share the above link with others to start receiving messages.
           </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <button
-              onClick={copyLink}
-              className="flex items-center gap-2 rounded-lg bg-purple-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-purple-600"
-            >
-              <CopyIcon className="size-4" />
-              Copy Link
-            </button>
-            <button
-              onClick={shareLink}
-              className="flex items-center gap-2 rounded-lg bg-pink-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-pink-600"
-            >
-              <ShareIcon className="size-4" />
-              Share Link
-            </button>
+
+          <div className="flex max-w-[540px] flex-wrap items-center gap-2">
+            <CopyMessageLink link={location + `/${user.id}`} />
+            <ShareMessageLink link={location + `/${user.id}`} />
+            <DeleteAccount />
           </div>
         </section>
 

@@ -1,8 +1,9 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { ArrowLeft, CornerUpRight } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useParams } from "react-router";
+import { Link, Navigate, useParams } from "react-router";
 import {
   conversationMessagesQuery,
   conversationQuery,
@@ -31,12 +32,26 @@ interface Message {
 
 const Conversation: React.FC = () => {
   const { conversationId } = useParams();
+
+  const { socket, connect } = useSocketStore();
+  useEffect(() => {
+    if (socket) return;
+    connect();
+  }, [socket, connect]);
+
   const viewportHeight = useViewportHeight();
+
   const [userResult, conversationResult] = useQueries({
     queries: [userQuery(), conversationQuery(conversationId)],
   });
 
   if (userResult.error || conversationResult.error) {
+    if (
+      isAxiosError(userResult.error) &&
+      userResult.error.response?.status === 401
+    ) {
+      return <Navigate to="/" />;
+    }
     return (
       <>
         <Header />
@@ -61,7 +76,7 @@ const Conversation: React.FC = () => {
       : conversation.sharedKeyEncryptedByUser2;
 
   return (
-    <>
+    <div style={{ maxHeight: viewportHeight, overflow: "hidden" }}>
       <Header />
       <main
         style={{
@@ -90,7 +105,7 @@ const Conversation: React.FC = () => {
           userId={user.id}
         />
       </main>
-    </>
+    </div>
   );
 };
 
@@ -299,12 +314,11 @@ const ConversationFooter = ({
           conversationId: conversationId,
           contentEncrypted: encryptedData,
           encryptionIV: iv,
-          createdAt: new Date().toISOString(),
           receiverId: friendId,
         },
-        (sent) => {
-          if (!sent) {
-            toast.error("Message sending failed!", {
+        (sent, message) => {
+          if (message || !sent) {
+            toast.error(message || "Message sending failed!", {
               id: "message-error",
             });
           }
@@ -323,6 +337,13 @@ const ConversationFooter = ({
     }
   };
 
+  const handleTypingEvent = () => {
+    socket?.emit("user:typing", friendId);
+  };
+  const handleStopTypingEvent = () => {
+    socket?.emit("user:stopTyping", friendId);
+  };
+
   return (
     <div className="pointer-events-none border-t border-purple-200 bg-white p-4">
       <div className="pointer-events-auto mx-auto flex max-w-4xl items-end space-x-2">
@@ -330,7 +351,8 @@ const ConversationFooter = ({
           ref={textareaRef}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          // onKeyDown={handleKeyDown}
+          onFocus={handleTypingEvent}
+          onBlur={handleStopTypingEvent}
           placeholder="Type a message..."
           rows={1}
           className="max-h-32 flex-1 resize-none overflow-y-auto rounded-lg border border-purple-300 p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
@@ -370,6 +392,8 @@ const Message = (props: MessageProps) => {
     createdAt,
     isMine,
   } = props;
+
+  // const formattedDate = formatDate(createdAt);
 
   return (
     <div className={cn("flex flex-col", isMine ? "items-end" : "items-start")}>

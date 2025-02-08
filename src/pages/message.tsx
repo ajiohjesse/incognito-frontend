@@ -18,6 +18,7 @@ import Encrypter from "../lib/encrypter";
 import { queryClient } from "../lib/react-query";
 import { storage } from "../lib/storage";
 import { handleQueryError } from "../lib/utils";
+import { useSocketStore } from "../stores/socket-store";
 
 const Message: React.FC = () => {
   const { userId } = useParams();
@@ -171,6 +172,7 @@ interface FirstMessageProps {
 const FirstMessage = (props: FirstMessageProps) => {
   const { friend } = props;
   const encrypter = new Encrypter();
+  const { socket, connect } = useSocketStore();
 
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
@@ -224,6 +226,7 @@ const FirstMessage = (props: FirstMessageProps) => {
       toast.success("Message sent successfully!", {
         id: "message-success",
       });
+      if (!socket) connect();
       queryClient.invalidateQueries(userQuery());
       navigate(`/u/messages/${data.conversationId}`);
     },

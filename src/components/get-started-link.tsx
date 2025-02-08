@@ -8,12 +8,14 @@ import Encrypter from "../lib/encrypter";
 import { queryClient } from "../lib/react-query";
 import { storage } from "../lib/storage";
 import { handleQueryError } from "../lib/utils";
+import { useSocketStore } from "../stores/socket-store";
 import Spinner from "./ui/spinner";
 
 function GetStartedLink() {
   const navigate = useNavigate();
   const fingerprint = storage.getDeviceFingerprint();
   const encrypter = new Encrypter();
+  const { socket, connect } = useSocketStore();
 
   const { isPending, mutate } = useMutation({
     mutationKey: ["generate-link"],
@@ -32,6 +34,7 @@ function GetStartedLink() {
       ).data.data;
     },
     onSuccess: () => {
+      if (!socket) connect();
       queryClient.invalidateQueries(userQuery());
       navigate("/u/messages");
     },
