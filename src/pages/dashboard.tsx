@@ -37,10 +37,10 @@ const Dashboard = () => {
       .getUserId()
       .then((id) => {
         console.log({ beamUserId: id });
-        if (!id) return;
-        if (id !== user.id) {
+        if (id && id !== user.id) {
           return beamsClient.stop();
         }
+        if (id) return;
         beamsClient.start().then(() => {
           beamsClient.setUserId(user.id, beamsTokenProvider);
         });
