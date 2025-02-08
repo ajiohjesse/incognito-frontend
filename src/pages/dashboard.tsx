@@ -17,6 +17,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs";
+import { beamsClient, beamsTokenProvider } from "../lib/pusher";
 import { useSocketStore } from "../stores/socket-store";
 
 const Dashboard = () => {
@@ -28,6 +29,24 @@ const Dashboard = () => {
     if (socket) return;
     connect();
   }, [socket, connect]);
+
+  //register push notifications
+  useEffect(() => {
+    if (!user) return;
+    beamsClient
+      .getUserId()
+      .then((id) => {
+        console.log({ beamUserId: id });
+        if (!id) return;
+        if (id !== user.id) {
+          return beamsClient.stop();
+        }
+        beamsClient.start().then(() => {
+          beamsClient.setUserId(user.id, beamsTokenProvider);
+        });
+      })
+      .catch(console.error);
+  }, [user]);
 
   if (userError) {
     return <Navigate to="/" replace />;
