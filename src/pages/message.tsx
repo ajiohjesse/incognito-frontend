@@ -1,6 +1,6 @@
 import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { VenetianMaskIcon } from "lucide-react";
+import { MessageCircle, Shield, Trash2, VenetianMaskIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate, useParams } from "react-router";
@@ -272,30 +272,34 @@ const MessageForm = (props: MessageFormProps) => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
-      <div className="mx-auto flex max-w-3xl flex-col px-4 py-12">
-        {/* Fancy Text Section */}
-        <div className="mb-8 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-purple-700">
-            <VenetianMaskIcon className="mr-2 mb-2 inline-block h-10 w-10 text-purple-500" />
-            Send an Anonymous Message
-          </h1>
-          <p className="font-medium text-slate-800">
+      {/* Fancy Text Section */}
+      <div className="bg-gradient-to-bl from-pink-500 to-purple-500 pt-12 pb-20 text-center text-white">
+        <div className="mx-auto max-w-3xl px-4">
+          <div className="flex flex-col items-center gap-2">
+            <VenetianMaskIcon className="mr-2 mb-2 inline-block size-20" />
+            <h1 className="mb-4 text-4xl font-bold">
+              Send an Anonymous Message
+            </h1>
+          </div>
+          <p className="mx-auto max-w-[60ch] font-medium">
             Share your thoughts, feelings, or secrets without revealing your
             identity. Let your words speak for themselves!
           </p>
         </div>
+      </div>
 
+      <div className="mx-auto -mt-12 flex max-w-3xl flex-col px-4 pb-12">
         {/* Recipient Username Section */}
-        <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+        <div className="mb-6 rounded-3xl bg-white p-6 shadow-lg">
           <h2 className="mb-2 text-xl font-semibold text-purple-700">
             Sending to:
           </h2>
-          <p className="text-lg font-medium text-pink-700">@{friendUsername}</p>
+          <p className="text-lg font-bold text-pink-700">@{friendUsername}</p>
         </div>
 
         {/* Message Input Section */}
-        <div className="flex flex-1 flex-col rounded-lg bg-white p-6 shadow-md">
-          <h2 className="mb-4 text-xl font-semibold text-purple-700">
+        <div className="flex flex-1 flex-col rounded-3xl bg-white p-6 shadow-lg">
+          <h2 className="mb-4 text-xl font-bold text-purple-700">
             Your Message:
           </h2>
           <textarea
@@ -303,22 +307,27 @@ const MessageForm = (props: MessageFormProps) => {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your anonymous message here..."
             rows={1}
-            className="flex-1 resize-none overflow-y-auto rounded-lg border border-purple-300 px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            className="flex-1 resize-none overflow-y-auto rounded-2xl border border-purple-300 bg-white px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
             style={{ minHeight: "200px" }}
           />
+
+          <div className="mt-4 rounded-2xl bg-purple-200 p-4 text-sm text-purple-800">
+            🔒 Your identity stays secret throughout the entire chat!
+          </div>
+
           <button
             onClick={handleSendMessage}
             disabled={isPending}
-            className="mt-4 rounded-lg bg-purple-600 px-6 py-3 text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-4 rounded-2xl bg-purple-600 px-6 py-3 text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Spinner loading={isPending} title="Sending message">
-              Send Message
+              Send Secret Message
             </Spinner>
           </button>
         </div>
 
         {/* Instructions Section */}
-        <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
+        {/* <div className="mt-6 rounded-3xl bg-white p-6 shadow-lg">
           <h2 className="mb-4 text-xl font-semibold text-purple-700">
             How It Works:
           </h2>
@@ -330,6 +339,43 @@ const MessageForm = (props: MessageFormProps) => {
               messages. You can always create a new link afterwards.
             </li>
           </ul>
+        </div> */}
+
+        {/* Fun Feature Cards - Moved to bottom */}
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {[
+            {
+              icon: <Shield className="h-6 w-6" />,
+              title: "Start Your Secret Chat!",
+              desc: "Begin your mysterious journey anonymously",
+            },
+            {
+              icon: <MessageCircle className="h-6 w-6" />,
+              title: "Chat Back & Forth",
+              desc: "Keep the conversation flowing both ways",
+            },
+            {
+              icon: <Trash2 className="h-6 w-6" />,
+              title: "Vanish Anytime",
+              desc: "Poof! Delete and start fresh whenever you want",
+            },
+          ].map((card, i) => (
+            <div
+              key={i}
+              className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg transition-transform hover:-translate-y-1"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="relative">
+                <div className="mb-4 inline-block rounded-xl bg-white/90 p-3 text-fuchsia-500 shadow-md">
+                  {card.icon}
+                </div>
+                <h3 className="mb-2 text-lg font-bold text-fuchsia-500">
+                  {card.title}
+                </h3>
+                <p>{card.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </main>

@@ -278,6 +278,9 @@ const ConversationFooter = ({
         newMessage,
       );
 
+      const now = new Date();
+      now.setHours(now.getHours() - 1);
+
       queryClient.setQueryData(
         conversationMessagesQuery(conversationId).queryKey,
         (old) => ({
@@ -287,7 +290,7 @@ const ConversationFooter = ({
                 {
                   contentEncrypted: encryptedData,
                   encryptionIV: iv,
-                  createdAt: new Date().toISOString(),
+                  createdAt: now.toISOString(),
                   senderId: userId,
                   conversationId,
                   id: crypto.randomUUID(),
@@ -298,7 +301,7 @@ const ConversationFooter = ({
                 {
                   contentEncrypted: encryptedData,
                   encryptionIV: iv,
-                  createdAt: new Date().toISOString(),
+                  createdAt: now.toISOString(),
                   senderId: userId,
                   conversationId,
                   id: crypto.randomUUID(),

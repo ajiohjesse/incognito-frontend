@@ -32,11 +32,11 @@ export const useSocketStore = create<SocketStore>((set, get) => ({
       set({ socket: socket });
     });
 
-    socket.on("connect_error", (error) => {
-      console.error(error);
-      set({ socket: null, activeFriends: [], friendsTyping: [] });
-      toast.error("Connection failed", { id: "socket-error" });
-    });
+    // socket.on("connect_error", (error) => {
+    //   console.error(error);
+    //   set({ socket: null, activeFriends: [], friendsTyping: [] });
+    //   toast.error("Connection failed", { id: "socket-error" });
+    // });
 
     socket.on("friends:online", (friends) => {
       set({ activeFriends: friends });
@@ -63,6 +63,19 @@ export const useSocketStore = create<SocketStore>((set, get) => ({
     socket.on("friend:message", (message) => {
       toast("You have a new message!", { id: "new-message" });
       queryClient.invalidateQueries(messagesQuery());
+      queryClient.setQueryData(
+        conversationMessagesQuery(message.conversationId).queryKey,
+        (old) => {
+          if (old) {
+            return {
+              messages: [...old.messages, message],
+            };
+          }
+          return {
+            messages: [message],
+          };
+        },
+      );
       queryClient.invalidateQueries(
         conversationMessagesQuery(message.conversationId),
       );

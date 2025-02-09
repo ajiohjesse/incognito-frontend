@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MessageSquareIcon } from "lucide-react";
 import { Link } from "react-router";
 import { messagesQuery } from "../api/queries";
+import { formatDate } from "../lib/utils";
 import FriendActiveStatus from "./friend-active-status";
 import MessageText from "./message-text";
 
@@ -64,7 +65,7 @@ const Messages = () => {
                   </span>
 
                   <span className="text-sm font-medium text-slate-600">
-                    {new Date(m.createdAt).toLocaleString()}
+                    {formatDate(m.createdAt)}
                   </span>
 
                   <FriendActiveStatus friendId={m.senderId} />
