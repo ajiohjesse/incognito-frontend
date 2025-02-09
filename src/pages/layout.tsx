@@ -31,7 +31,17 @@ const Layout = () => {
           </div>
         </div>
         <div className="container mt-8 text-center font-medium text-slate-300">
-          <p>Built with ❤️ (and encrypted bytes) by R3HX.</p>
+          <p>
+            Built with ❤️ (and encrypted bytes) by{" "}
+            <a
+              href="http://x.com/rehxofficial"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              R3HX.
+            </a>
+          </p>
         </div>
       </footer>
     </>

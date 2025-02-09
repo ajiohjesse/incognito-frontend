@@ -271,8 +271,8 @@ const MessageForm = (props: MessageFormProps) => {
     props;
 
   return (
-    <main className="bg-gradient-to-b from-purple-50 to-pink-50">
-      <div className="mx-auto flex max-w-4xl flex-col px-4 py-12">
+    <main className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
+      <div className="mx-auto flex max-w-3xl flex-col px-4 py-12">
         {/* Fancy Text Section */}
         <div className="mb-8 text-center">
           <h1 className="mb-4 text-4xl font-bold text-purple-700">
@@ -309,12 +309,27 @@ const MessageForm = (props: MessageFormProps) => {
           <button
             onClick={handleSendMessage}
             disabled={isPending}
-            className="mt-4 rounded-lg bg-purple-600 px-6 py-3 text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            className="mt-4 rounded-lg bg-purple-600 px-6 py-3 text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Spinner loading={isPending} title="Sending message">
               Send Message
             </Spinner>
           </button>
+        </div>
+
+        {/* Instructions Section */}
+        <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
+          <h2 className="mb-4 text-xl font-semibold text-purple-700">
+            How It Works:
+          </h2>
+          <ul className="list-inside list-disc space-y-2 text-slate-700">
+            <li>Start an anonymous conversation with this user.</li>
+            <li>Both of you can reply to this conversation.</li>
+            <li>
+              You can delete your account at any point to stop receiving
+              messages. You can always create a new link afterwards.
+            </li>
+          </ul>
         </div>
       </div>
     </main>

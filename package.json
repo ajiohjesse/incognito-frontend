@@ -20,6 +20,8 @@
     "@thumbmarkjs/thumbmarkjs": "^0.16.1",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
+    "downloadjs": "^1.4.7",
+    "html-to-image": "^1.11.11",
     "lucide-react": "^0.474.0",
     "motion": "^12.0.6",
     "react": "^18.3.1",

@@ -2,7 +2,8 @@ import toast from "react-hot-toast";
 
 export const useShare = (link: string): (() => void) => {
   const share = () => {
-    const message = "Send me anonymous messages. Use the link below.";
+    const message =
+      "🎉Let's have an anonymous conversation🎉 Use the link below to send me a message  🙈";
     const shareData = {
       title: "Anonymous Messages",
       text: message,
@@ -10,11 +11,7 @@ export const useShare = (link: string): (() => void) => {
     };
 
     if (navigator.share) {
-      navigator.share(shareData).catch(() => {
-        toast.error("Failed to share the link.", {
-          id: "share-error",
-        });
-      });
+      navigator.share(shareData).catch(console.error);
     } else {
       toast.error("Web Share API not supported in this browser.", {
         id: "share-error",
