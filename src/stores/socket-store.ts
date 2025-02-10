@@ -32,12 +32,6 @@ export const useSocketStore = create<SocketStore>((set, get) => ({
       set({ socket: socket });
     });
 
-    // socket.on("connect_error", (error) => {
-    //   console.error(error);
-    //   set({ socket: null, activeFriends: [], friendsTyping: [] });
-    //   toast.error("Connection failed", { id: "socket-error" });
-    // });
-
     socket.on("friends:online", (friends) => {
       set({ activeFriends: friends });
     });

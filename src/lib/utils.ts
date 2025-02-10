@@ -21,18 +21,8 @@ export function handleQueryError(error: unknown) {
   toast.error("Something went wrong");
 }
 
-// export function formatDate(date: string) {
-//   return new Date(date).toLocaleString("en-NG", {
-//     timeZone: "Africa/Lagos",
-//     dateStyle: "medium",
-//     timeStyle: "short",
-//     hour12: true,
-//   });
-// }
-
 export function formatDate(utcTime: string): string {
-  // Parse the UTC time into a Date object
-  const date = new Date(utcTime); // Adding "Z" ensures it's treated as UTC
+  const date = new Date(utcTime);
 
   // Convert to UTC+1 by adding 1 hour
   date.setHours(date.getHours() + 1);
@@ -50,3 +40,7 @@ export function formatDate(utcTime: string): string {
 
   return formattedDateTime;
 }
+
+export const isSafari = () => {
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+};

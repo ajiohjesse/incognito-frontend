@@ -18,6 +18,7 @@ import {
   TabsTrigger,
 } from "../components/ui/tabs";
 import { beamsClient, beamsTokenProvider } from "../lib/pusher";
+import { isSafari } from "../lib/utils";
 import { useSocketStore } from "../stores/socket-store";
 
 const Dashboard = () => {
@@ -32,7 +33,7 @@ const Dashboard = () => {
 
   //register push notifications
   useEffect(() => {
-    if (!user) return;
+    if (!user || isSafari()) return;
     beamsClient
       .getUserId()
       .then((id) => {

@@ -10,6 +10,7 @@ import Layout from "./pages/layout";
 import Message from "./pages/message";
 import NotFoundPage from "./pages/not-found";
 import PrivacyPolicy from "./pages/privacy-policy";
+import ShareMessagePage from "./pages/share-message";
 import TermsOfService from "./pages/terms-of-service";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="u/messages" element={<Dashboard />} />
+            <Route path="u/messages/share" element={<ShareMessagePage />} />
 
             <Route path=":userId" element={<Message />} />
 

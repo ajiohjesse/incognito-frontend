@@ -13,14 +13,15 @@ import {
 import ActiveStatus from "../components/active-status";
 import ErrorDisplay from "../components/error";
 import Header from "../components/header";
-import MessageText from "../components/message-text";
 import PageLoader from "../components/page-loader";
 import Spinner from "../components/ui/spinner";
+import useDecryptMessage from "../hooks/use-decrypt-message";
 import useViewportHeight from "../hooks/use-viewport-height";
 import Encrypter from "../lib/encrypter";
 import { queryClient } from "../lib/react-query";
 import { storage } from "../lib/storage";
 import { cn, formatDate } from "../lib/utils";
+import { useShareMessageStore } from "../stores/share-message-store";
 import { useSocketStore } from "../stores/socket-store";
 
 interface Message {
@@ -396,7 +397,11 @@ const Message = (props: MessageProps) => {
     isMine,
   } = props;
 
-  // const formattedDate = formatDate(createdAt);
+  const message = useDecryptMessage({
+    messageEncrypted: contentEncrypted,
+    sharedKeyEncrypted,
+    iv: encryptionIV,
+  });
 
   return (
     <div className={cn("flex flex-col", isMine ? "items-end" : "items-start")}>
@@ -428,17 +433,25 @@ const Message = (props: MessageProps) => {
             : "rounded-bl-none bg-pink-800 text-white",
         )}
       >
-        <p>
-          <MessageText
-            iv={encryptionIV}
-            messageEncrypted={contentEncrypted}
-            sharedKeyEncrypted={sharedKeyEncrypted}
-          />
-        </p>
+        <p>{message}</p>
       </div>
-      <button className="mt-2 flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-sm font-semibold text-purple-600 transition-colors hover:bg-purple-200 hover:text-purple-900">
-        Share <CornerUpRight className="size-4" />
-      </button>
+      <ShareButton message={message} />
     </div>
+  );
+};
+
+const ShareButton = ({ message }: { message: string }) => {
+  const handleShare = () => {
+    useShareMessageStore.getState().setMessage(message);
+  };
+
+  return (
+    <Link
+      to="/u/messages/share"
+      onClick={handleShare}
+      className="mt-2 flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-sm font-semibold text-purple-600 transition-colors hover:bg-purple-200 hover:text-purple-900"
+    >
+      Share <CornerUpRight className="size-4" />
+    </Link>
   );
 };
