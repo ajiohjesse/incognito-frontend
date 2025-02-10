@@ -9,6 +9,8 @@ import HomePage from "./pages/homepage";
 import Layout from "./pages/layout";
 import Message from "./pages/message";
 import NotFoundPage from "./pages/not-found";
+import PrivacyPolicy from "./pages/privacy-policy";
+import TermsOfService from "./pages/terms-of-service";
 
 function App() {
   return (
@@ -21,6 +23,9 @@ function App() {
             <Route path="u/messages" element={<Dashboard />} />
 
             <Route path=":userId" element={<Message />} />
+
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
           <Route path="u/messages/:conversationId" element={<Conversation />} />

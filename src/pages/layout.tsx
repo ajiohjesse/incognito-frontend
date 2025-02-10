@@ -1,5 +1,5 @@
 import { VenetianMaskIcon } from "lucide-react";
-import { Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
 import Header from "../components/header";
 
 const Layout = () => {
@@ -16,12 +16,18 @@ const Layout = () => {
             <span className="text-xl font-bold text-slate-50">Incognito</span>
           </div>
           <div className="flex gap-6 text-slate-300 underline">
-            <a href="#" className="transition-colors hover:text-purple-500">
+            <Link
+              to="/privacy-policy"
+              className="transition-colors hover:text-purple-500"
+            >
               Privacy Policy
-            </a>
-            <a href="#" className="transition-colors hover:text-purple-500">
+            </Link>
+            <Link
+              to="/terms-of-service"
+              className="transition-colors hover:text-purple-500"
+            >
               Terms
-            </a>
+            </Link>
             <a
               href="mailto:me@rehx.name.ng"
               className="transition-colors hover:text-purple-500"

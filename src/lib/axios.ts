@@ -19,17 +19,13 @@ api.interceptors.request.use(
   },
 );
 
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error?.response?.status === 401) {
-//       toast.error("Your session has expired. Create a new link.", {
-//         id: "auth-error",
-//       });
-//       storage.deletePrivateKey();
-//       storage.deleteDeviceFingerprint();
-//       window.location.href = "/";
-//     }
-//     return Promise.reject(error);
-//   },
-// );
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401) {
+      storage.deletePrivateKey();
+      storage.deleteDeviceFingerprint();
+    }
+    return Promise.reject(error);
+  },
+);
