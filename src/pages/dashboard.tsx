@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Navigate } from "react-router";
+import { useVitePostHog } from "vite-plugin-posthog/react";
 import { userQuery } from "../api/queries";
 import ActiveStatus from "../components/active-status";
 import Conversations from "../components/conversations";
@@ -25,6 +26,11 @@ const Dashboard = () => {
   const location = window.location.origin;
   const { socket, connect } = useSocketStore();
   const { registerUser } = usePusherBeams();
+  const posthog = useVitePostHog();
+
+  useEffect(() => {
+    posthog?.identify(user?.id);
+  }, [user, posthog]);
 
   useEffect(() => {
     if (socket) return;
