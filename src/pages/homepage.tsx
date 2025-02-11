@@ -18,17 +18,17 @@ const HomePage = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/20 to-transparent opacity-40 blur-3xl" />
 
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative z-10 flex max-w-2xl flex-[1.5] flex-col items-center text-center lg:items-start lg:text-start"
+            className="relative z-10 flex max-w-2xl flex-[1.5] transform-cpu flex-col items-center text-center lg:items-start lg:text-start"
           >
             <VenetianMaskIcon className="absolute -top-20 -left-4 size-24 -rotate-20 opacity-5" />
             <VenetianMaskIcon className="absolute top-70 right-4 size-24 rotate-20 opacity-5" />
 
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
               className="mb-6 text-[clamp(2.5rem,7vw,3.5rem)] leading-tight font-bold"
             >
@@ -45,8 +45,8 @@ const HomePage = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             className="relative flex-1"
           >
@@ -65,7 +65,6 @@ const HomePage = () => {
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="mb-14 text-center text-4xl font-bold"
           >
@@ -98,7 +97,6 @@ const HomePage = () => {
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 whileHover={{ scale: 1.05 }}
                 className="group rounded-2xl bg-white p-6 shadow-2xl shadow-purple-700/20 transition-colors hover:bg-purple-600"
@@ -123,7 +121,6 @@ const HomePage = () => {
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="mb-16 text-center text-4xl font-bold"
             >
@@ -135,7 +132,6 @@ const HomePage = () => {
                   key={i}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   whileHover={{ y: -5 }}
                   className="rounded-2xl bg-purple-50 p-8 shadow-lg"
@@ -162,7 +158,6 @@ const HomePage = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="relative mx-auto grid max-w-3xl place-items-center"
           >
