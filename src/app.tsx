@@ -3,7 +3,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { queryClient } from "./lib/react-query";
-import { isSafari } from "./lib/utils";
 import Conversation from "./pages/conversation";
 import Dashboard from "./pages/dashboard";
 import HomePage from "./pages/homepage";
@@ -15,8 +14,6 @@ import ShareMessagePage from "./pages/share-message";
 import TermsOfService from "./pages/terms-of-service";
 
 function App() {
-  console.log({ isSafari: isSafari() });
-
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster />
