@@ -1,5 +1,4 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { queryClient } from "./lib/react-query";
@@ -33,7 +32,6 @@ function App() {
           <Route path="u/messages/:conversationId" element={<Conversation />} />
         </Routes>
       </BrowserRouter>
-      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

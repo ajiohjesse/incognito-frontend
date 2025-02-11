@@ -1,6 +1,7 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { ArrowLeft, CornerUpRight } from "lucide-react";
+import { motion } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, Navigate, useParams } from "react-router";
@@ -404,17 +405,25 @@ const Message = (props: MessageProps) => {
   });
 
   return (
-    <div className={cn("flex flex-col", isMine ? "items-end" : "items-start")}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ type: "spring", duration: 0.5 }}
+      className={cn("flex flex-col", isMine ? "items-end" : "items-start")}
+    >
       <div className="mb-2 grid">
         <div className="flex items-center gap-2">
-          <span
+          <motion.span
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", delay: 0.1 }}
             className={cn(
               "grid h-10 w-10 shrink-0 place-items-center rounded-full font-bold text-white shadow-2xl",
               isMine ? "bg-purple-800" : "bg-pink-800",
             )}
           >
             {isMine ? username[0] : friendUsername[0]}
-          </span>
+          </motion.span>
           <div className="grid">
             <span className="font-bold">
               {isMine ? username : friendUsername}
@@ -425,7 +434,10 @@ const Message = (props: MessageProps) => {
           </div>
         </div>
       </div>
-      <div
+      <motion.div
+        initial={{ x: isMine ? 20 : -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ type: "spring" }}
         className={cn(
           "relative max-w-[70%] rounded-2xl px-4 py-2 break-words",
           isMine
@@ -434,9 +446,9 @@ const Message = (props: MessageProps) => {
         )}
       >
         <p>{message}</p>
-      </div>
+      </motion.div>
       <ShareButton message={message} />
-    </div>
+    </motion.div>
   );
 };
 
