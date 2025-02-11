@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Trash2Icon } from "lucide-react";
 import toast from "react-hot-toast";
 import { api } from "../lib/axios";
-import { beamsClient } from "../lib/pusher";
+import { usePusherBeams } from "../lib/pusher";
 import { storage } from "../lib/storage";
 import {
   AlertDialog,
@@ -18,15 +18,19 @@ import {
 import Spinner from "./ui/spinner";
 
 const DeleteAccount = () => {
+  const { stopBeams } = usePusherBeams();
+
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       await api.delete("/users");
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Account deleted successfully!", { id: "delete-account" });
-      beamsClient.stop();
       storage.deleteDeviceFingerprint();
       storage.deletePrivateKey();
+      if (stopBeams) {
+        stopBeams();
+      }
       window.location.href = "/";
     },
   });

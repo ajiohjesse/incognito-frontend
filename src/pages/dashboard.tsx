@@ -17,14 +17,14 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs";
-import { beamsClient, beamsTokenProvider } from "../lib/pusher";
-import { isSafari } from "../lib/utils";
+import { usePusherBeams } from "../lib/pusher";
 import { useSocketStore } from "../stores/socket-store";
 
 const Dashboard = () => {
   const { data: user, error: userError } = useQuery(userQuery());
   const location = window.location.origin;
   const { socket, connect } = useSocketStore();
+  const { registerUser } = usePusherBeams();
 
   useEffect(() => {
     if (socket) return;
@@ -33,22 +33,9 @@ const Dashboard = () => {
 
   //register push notifications
   useEffect(() => {
-    if (!user || isSafari()) return;
-
-    beamsClient
-      .getUserId()
-      .then((id) => {
-        console.log({ beamUserId: id });
-        if (id && id !== user.id) {
-          return beamsClient.stop();
-        }
-        if (id) return;
-        beamsClient.start().then(() => {
-          beamsClient.setUserId(user.id, beamsTokenProvider);
-        });
-      })
-      .catch(console.error);
-  }, [user]);
+    if (!user || !registerUser) return;
+    registerUser(user.id);
+  }, [user, registerUser]);
 
   if (userError) {
     return <Navigate to="/" replace />;
