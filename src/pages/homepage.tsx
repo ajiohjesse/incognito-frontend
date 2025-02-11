@@ -5,6 +5,7 @@ import {
   VenetianMaskIcon,
   ZapIcon,
 } from "lucide-react";
+import { motion } from "motion/react";
 import heroImage from "../assets/hero3.svg";
 import GetStartedLink from "../components/get-started-link";
 
@@ -16,23 +17,39 @@ const HomePage = () => {
         <section className="relative container flex flex-col items-center justify-between gap-x-20 gap-y-14 py-20 lg:flex-row">
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/20 to-transparent opacity-40 blur-3xl" />
 
-          <div className="relative z-10 flex max-w-2xl flex-[1.5] flex-col items-center text-center lg:items-start lg:text-start">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10 flex max-w-2xl flex-[1.5] flex-col items-center text-center lg:items-start lg:text-start"
+          >
             <VenetianMaskIcon className="absolute -top-20 -left-4 size-24 -rotate-20 opacity-5" />
             <VenetianMaskIcon className="absolute top-70 right-4 size-24 rotate-20 opacity-5" />
 
-            <h1 className="mb-6 text-[clamp(2.5rem,7vw,3.5rem)] leading-tight font-bold">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="mb-6 text-[clamp(2.5rem,7vw,3.5rem)] leading-tight font-bold"
+            >
               Send <span className="text-purple-500">Secret Messages </span>
-              Like A Digital Ghost 👻
-            </h1>
+              Like A Digital Ghost{" "}
+              <span className="inline-block animate-pulse">👻</span>
+            </motion.h1>
             <p className="mb-8 text-xl font-medium">
               Whisper your thoughts without revealing your identity. Realtime
               messages, fully encrypted, completely anonymous, and absolutely
               fun!
             </p>
             <GetStartedLink />
-          </div>
+          </motion.div>
 
-          <div className="relative flex-1">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative flex-1"
+          >
             <img
               src={heroImage}
               alt="Chat Preview"
@@ -40,14 +57,20 @@ const HomePage = () => {
             />
 
             <div className="absolute right-0 -bottom-20 -z-10 size-[600px] rounded-full bg-gradient-to-r from-transparent to-purple-500 opacity-30 blur-[100px]" />
-          </div>
+          </motion.div>
         </section>
 
         {/* Features Section */}
         <section id="features" className="container py-14">
-          <h2 className="mb-14 text-center text-4xl font-bold">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-14 text-center text-4xl font-bold"
+          >
             Why Choose Incognito?
-          </h2>
+          </motion.h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {[
               {
@@ -71,8 +94,13 @@ const HomePage = () => {
                 desc: "Respond to messages without revealing identity.",
               },
             ].map((feature, i) => (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ scale: 1.05 }}
                 className="group rounded-2xl bg-white p-6 shadow-2xl shadow-purple-700/20 transition-colors hover:bg-purple-600"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600 text-white transition-transform group-hover:scale-110">
@@ -84,7 +112,7 @@ const HomePage = () => {
                 <p className="font-medium text-gray-700 group-hover:text-purple-50">
                   {feature.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </section>
@@ -92,12 +120,26 @@ const HomePage = () => {
         {/* Testimonials Section */}
         <section id="testimonials" className="bg-purple-500/10 py-20">
           <div className="container">
-            <h2 className="mb-16 text-center text-4xl font-bold">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-16 text-center text-4xl font-bold"
+            >
               What People Are Saying
-            </h2>
+            </motion.h2>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {testimonials.map((testimonial, i) => (
-                <div key={i} className="rounded-2xl bg-purple-50 p-8 shadow-lg">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  className="rounded-2xl bg-purple-50 p-8 shadow-lg"
+                >
                   <div className="mb-4 flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-white">
                       <VenetianMaskIcon className="h-6 w-6" />
@@ -109,7 +151,7 @@ const HomePage = () => {
                   <p className="font-medium text-slate-700">
                     "{testimonial.text}"
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -117,7 +159,13 @@ const HomePage = () => {
 
         {/* CTA Section */}
         <section className="container py-20 text-center">
-          <div className="relative mx-auto grid max-w-3xl place-items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative mx-auto grid max-w-3xl place-items-center"
+          >
             <div className="absolute -top-20 left-1/2 h-[200px] w-[200px] -translate-x-1/2 rounded-full bg-purple-500 opacity-30 blur-[80px]" />
             <h2 className="mb-6 text-4xl font-bold">
               Ready to Go Incognito? 👻
@@ -127,7 +175,7 @@ const HomePage = () => {
               messages today!
             </p>
             <GetStartedLink />
-          </div>
+          </motion.div>
         </section>
       </main>
     </>
