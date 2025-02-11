@@ -8,7 +8,7 @@ const ShareMessagePage = () => {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
 
   const splitIntoChunks = (text: string): string[] => {
-    const CHARS_PER_CHUNK = 220;
+    const CHARS_PER_CHUNK = 300;
     const chunks: string[] = [];
     const words = text.split(" ");
     let currentChunk: string[] = [];
@@ -107,8 +107,14 @@ const ShareMessagePage = () => {
                 <h2 className="bg-gradient-to-br from-pink-500 to-purple-500 p-4 text-center text-2xl font-bold text-white">
                   Anonymous Message
                 </h2>
-                <p className="px-6 py-4 text-lg font-medium text-pretty">
-                  {chunk}
+                <p className="px-6 py-4 text-lg text-sm font-medium text-pretty sm:text-base">
+                  {messageChunks.length > 1
+                    ? index === 0
+                      ? chunk + " . . . "
+                      : index === messageChunks.length - 1
+                        ? " . . . " + chunk
+                        : " . . . " + chunk + " . . . "
+                    : chunk}
                 </p>
                 <div className="p-4 pt-0 text-center text-xs font-medium text-slate-400">
                   <p>incognito.rehx.name.ng</p>
