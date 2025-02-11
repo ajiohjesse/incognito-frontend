@@ -1,4 +1,3 @@
-import * as PusherPushNotifications from "@pusher/push-notifications-web";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Navigate } from "react-router";
@@ -18,7 +17,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs";
-import { storage } from "../lib/storage";
+import { beamsClient, beamsTokenProvider } from "../lib/pusher";
 import { isSafari } from "../lib/utils";
 import { useSocketStore } from "../stores/socket-store";
 
@@ -35,17 +34,6 @@ const Dashboard = () => {
   //register push notifications
   useEffect(() => {
     if (!user || isSafari()) return;
-
-    const beamsClient = new PusherPushNotifications.Client({
-      instanceId: import.meta.env.VITE_PUSHER_ID,
-    });
-
-    const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
-      url: import.meta.env.VITE_API_BASE_URL + "/users/pusher-token",
-      headers: {
-        "x-device-fingerprint": storage.getDeviceFingerprint() || "",
-      },
-    });
 
     beamsClient
       .getUserId()
