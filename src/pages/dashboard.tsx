@@ -29,6 +29,7 @@ const Dashboard = () => {
   const posthog = useVitePostHog();
 
   useEffect(() => {
+    if (!posthog) return;
     posthog?.identify(user?.id);
   }, [user, posthog]);
 

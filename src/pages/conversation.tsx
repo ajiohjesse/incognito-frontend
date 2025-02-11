@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, Navigate, useParams } from "react-router";
+import { useVitePostHog } from "vite-plugin-posthog/react";
 import {
   conversationMessagesQuery,
   conversationQuery,
@@ -242,6 +243,7 @@ const ConversationFooter = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { socket } = useSocketStore();
   const encrypter = new Encrypter();
+  const posthog = useVitePostHog();
 
   // Adjust textarea height based on content
   useEffect(() => {
@@ -330,6 +332,7 @@ const ConversationFooter = ({
             conversationMessagesQuery(conversationId),
           );
           queryClient.invalidateQueries(messagesQuery());
+          posthog?.capture("message_sent");
         },
       );
       setNewMessage("");
