@@ -175,14 +175,15 @@ const ConversationBody = ({
   const { data, error } = useQuery(conversationMessagesQuery(conversationId));
   const { friendsTyping } = useSocketStore();
   const isTyping = friendsTyping.includes(friendId);
+  const [decryptedMessagesCount, setDecryptedMessagesCount] = useState(0);
 
-  // Auto-scroll to the latest message
+  // Scroll when all messages are decrypted
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [data]);
+    if (!data || decryptedMessagesCount < data.messages.length) return;
+
+    const messagesDiv = chatContainerRef?.current?.lastElementChild;
+    messagesDiv?.scrollIntoView();
+  }, [data, decryptedMessagesCount]);
 
   if (error) {
     return <ErrorDisplay />;
@@ -200,11 +201,8 @@ const ConversationBody = ({
   }
 
   return (
-    <section
-      ref={chatContainerRef}
-      className="mx-auto w-full flex-1 overflow-y-auto p-4 py-12"
-    >
-      <div className="mx-auto max-w-4xl space-y-8">
+    <section className="relative mx-auto w-full flex-1 overflow-y-auto bg-[url('/chat-bg.jfif')] bg-cover bg-center p-4 py-12">
+      <div className="mx-auto max-w-4xl space-y-8" ref={chatContainerRef}>
         {data.messages.map((msg, idx) => (
           <Message
             key={idx}
@@ -215,6 +213,7 @@ const ConversationBody = ({
             friendUsername={friendUsername}
             createdAt={msg.createdAt}
             isMine={msg.senderId === userId}
+            setDecryptedMessagesCount={setDecryptedMessagesCount}
           />
         ))}
         {isTyping && (
@@ -385,6 +384,7 @@ interface MessageProps {
   friendUsername: string;
   createdAt: string;
   isMine: boolean;
+  setDecryptedMessagesCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Message = (props: MessageProps) => {
@@ -396,6 +396,7 @@ const Message = (props: MessageProps) => {
     friendUsername,
     createdAt,
     isMine,
+    setDecryptedMessagesCount,
   } = props;
 
   const message = useDecryptMessage({
@@ -403,6 +404,13 @@ const Message = (props: MessageProps) => {
     sharedKeyEncrypted,
     iv: encryptionIV,
   });
+
+  // Notify parent when message is decrypted
+  useEffect(() => {
+    if (message) {
+      setDecryptedMessagesCount((prev) => prev + 1);
+    }
+  }, [message, setDecryptedMessagesCount]);
 
   return (
     <motion.div
@@ -439,7 +447,7 @@ const Message = (props: MessageProps) => {
         animate={{ x: 0, opacity: 1 }}
         transition={{ type: "spring" }}
         className={cn(
-          "relative max-w-[70%] rounded-2xl px-4 py-2 break-words",
+          "relative max-w-[80%] rounded-2xl px-4 py-2 break-words shadow-xl sm:max-w-[70%]",
           isMine
             ? "rounded-br-none bg-purple-800 text-white"
             : "rounded-bl-none bg-pink-800 text-white",
