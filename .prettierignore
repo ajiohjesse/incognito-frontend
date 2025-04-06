@@ -2,6 +2,7 @@
 build
 dist
 coverage
+.next
 
 
 # Ignore all node_modules
